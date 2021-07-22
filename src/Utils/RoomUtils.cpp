@@ -84,7 +84,7 @@ namespace MapLoader::RoomUtils
 
         std::string lobbyName = MonkeRoomManager::get_instance()->GetLobbyIfExists(map);
         
-        if (lobbyName != "") 
+        if (lobbyName != "" && false)
         {
             photonNetworkController->currentGameType = gameType;
             GorillaUI::BaseGameInterface::JoinRoom(lobbyName);

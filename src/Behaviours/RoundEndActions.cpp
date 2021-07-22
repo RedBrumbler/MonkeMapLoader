@@ -5,6 +5,8 @@
 
 DEFINE_TYPE(MapLoader::RoundEndActions);
 
+#include "MapEventCallbacks.hpp"
+
 using namespace UnityEngine;
 
 namespace MapLoader
@@ -20,6 +22,8 @@ namespace MapLoader
         Array<RoundEndActions*>* endActions = Resources::FindObjectsOfTypeAll<RoundEndActions*>();
         if (!endActions) return;
 
+        MapEventCallbacks::OnRoundEnd();
+        
         for (int i = 0; i < endActions->Length(); i++)
         {
             RoundEndActions* action = endActions->values[i];

@@ -10,7 +10,6 @@
 DECLARE_CLASS_CODEGEN(MapLoader, MovingPlatform, UnityEngine::MonoBehaviour,
     DECLARE_METHOD(void, Awake);
     DECLARE_METHOD(void, OnTriggerEnter, UnityEngine::Collider* collider);
-    DECLARE_METHOD(void, OnTriggerStay, UnityEngine::Collider* collider);
     DECLARE_METHOD(void, OnTriggerExit, UnityEngine::Collider* collider);
     DECLARE_METHOD(void, Update);
     DECLARE_METHOD(void, LateUpdate);

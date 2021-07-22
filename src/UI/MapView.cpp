@@ -171,7 +171,7 @@ namespace MapLoader
         {
             text += string_format("\n  You are missing %d mod%s.", count, count > 1 ? "s" : "");
             text += count > 1 ? "\n  These are their IDs:" : "\n  This is the ID: ";
-
+            
             for (auto& s : missingModIDs)
             {
                 text += string_format("\n  %s", s.c_str());
@@ -179,8 +179,9 @@ namespace MapLoader
 
             text += "\n\n  Please install these mods in order to play on this map,";
             text += "\n  This map will not be allowed to be loaded";
-            text += "\n</size>";
         }   
+        
+        text += "\n</size>";
         text += "</color>";
 
         text += "\n<size=60>";

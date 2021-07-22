@@ -3,14 +3,14 @@
     "name": "Monke Map Loader",
     "id": "MonkeMapLoader",
     "author": "RedBrumbler",
-    "version": "1.0.2",
+    "version": "1.1.0",
     "packageId": "com.AnotherAxiom.GorillaTag",
-    "packageVersion": "1.0.7",
+    "packageVersion": "1.0.8",
     "type": "Gameplay",
     "dependencies": [
         {
             "id": "MonkeComputer",
-            "version": "^1.4.0",
+            "version": ">=1.4.1",
             "downloadIfMissing": "https://github.com/RedBrumbler/MonkeComputer/releases/latest/download/MonkeComputer.qmod"
         }
     ],

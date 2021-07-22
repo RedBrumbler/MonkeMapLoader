@@ -33,6 +33,7 @@
 #include "UnityEngine/SceneManagement/LocalPhysicsMode.hpp"
 #include "Utils/LightingUtils.hpp"
 
+#include "MapEventCallbacks.hpp"
 DEFINE_TYPE(MapLoader::Loader);
 
 extern Logger& getLogger();
@@ -48,20 +49,23 @@ namespace MapLoader
     GameObject* Loader::mapInstance = nullptr;
     bool Loader::isLoading = false;
     bool Loader::isMoved = false;
-    
+    MapLoadData* Loader::mapLoadData = nullptr;
+
     void Loader::ctor()
     {
         instance = this;
     }
     
     void Loader::Awake()
-    {}
+    {
+        mapLoadData = nullptr;
+    }
 
     void Loader::Update()
     {
-        if (!mapLoadData.moveNext) return;
-        mapLoadData.moveNext = false;
-        switch (mapLoadData.loadState)
+        if (!mapLoadData || !mapLoadData->moveNext) return;
+        mapLoadData->moveNext = false;
+        switch (mapLoadData->loadState)
         {
             case LoadState::LoadingData:
                 LoadData();
@@ -132,7 +136,8 @@ namespace MapLoader
             auto* loader = new CosmeticLoader(treeTeleporterPath, [&](std::string name, Il2CppObject* teleporter){
                 globalData->bigTreeTeleportToMap = (GameObject*)teleporter;
                 Vector3 pos = globalData->bigTreeTeleportToMap->get_transform()->get_position();
-                pos.z += 2.9f;
+                pos.z += 3.0f;
+                pos.x += 0.3f;
                 pos.y -= 0.05f;
                 globalData->bigTreeTeleportToMap->get_transform()->set_position(pos);
 
@@ -268,6 +273,8 @@ namespace MapLoader
         {
             RoomUtils::JoinModdedLobby(lobbyName);
 
+            MapEventCallbacks::OnMapEnter();
+
             Vector3 gravity = {0.0, mapDescriptor->gravity, 0.0f};
             using SetGravity = function_ptr_t<void, Vector3&>;
             static SetGravity set_gravity = reinterpret_cast<SetGravity>(il2cpp_functions::resolve_icall("UnityEngine.Physics::set_gravity_Injected"));
@@ -330,8 +337,9 @@ namespace MapLoader
         using SetGravity = function_ptr_t<void, Vector3&>;
         static SetGravity set_gravity = reinterpret_cast<SetGravity>(il2cpp_functions::resolve_icall("UnityEngine.Physics::set_gravity_Injected"));
         set_gravity(gravity);
-        /// Get All Objects Of Type GameObject
 
+        MapEventCallbacks::OnMapLeave();
+        
         /// Get All Objects Of Type GameObject
         Array<GameObject*>* allObjects = Resources::FindObjectsOfTypeAll<GameObject*>();
         // if not null
@@ -362,39 +370,39 @@ namespace MapLoader
     void Loader::LoadMap(MapInfo info)
     {
         if (isLoading) return;
-        if (mapLoadData.info.filePath == info.filePath) return;
+        if (mapLoadData && mapLoadData->info.filePath == info.filePath) return;
         isLoading = true;
         UnloadMap();
 
-
-        mapLoadData.info = info;
-        mapLoadData.loadState = (LoadState)0;
-        mapLoadData.moveNext = true;
+        if (!mapLoadData) mapLoadData = new MapLoadData(info); 
+        else mapLoadData->info = info;
+        mapLoadData->loadState = (LoadState)0;
+        mapLoadData->moveNext = true;
     }
 
     void Loader::LoadData()
     {
         std::thread bundleLoad([&]{
             int err = 0;
-            zip *z = zip_open(mapLoadData.info.filePath.c_str(), 0, &err);
+            zip *z = zip_open(mapLoadData->info.filePath.c_str(), 0, &err);
 
             struct zip_stat st;
             zip_stat_init(&st);
-            zip_stat(z, mapLoadData.info.packageInfo->androidFileName.c_str(), 0, &st);
+            zip_stat(z, mapLoadData->info.packageInfo->androidFileName.c_str(), 0, &st);
 
             zip_file* f = zip_fopen(z, st.name, 0);
             uint8_t* bundle = new uint8_t[st.size];
             zip_fread(f, (char*)bundle, st.size);
             zip_fclose(f);
             zip_close(z);
-            this->mapLoadData.data.clear();
+            this->mapLoadData->data.clear();
             
-            this->mapLoadData.data = std::vector<uint8_t>(bundle, bundle + st.size);
+            this->mapLoadData->data = std::vector<uint8_t>(bundle, bundle + st.size);
 
             delete[](bundle);
 
-            this->mapLoadData.loadState = LoadState::LoadingBundle;
-            this->mapLoadData.moveNext = true;
+            this->mapLoadData->loadState = LoadState::LoadingBundle;
+            this->mapLoadData->moveNext = true;
         });
 
         bundleLoad.detach();
@@ -402,19 +410,19 @@ namespace MapLoader
 
     void Loader::LoadBundle()
     {
-        Array<uint8_t>* byteArray = il2cpp_utils::vectorToArray(mapLoadData.data);
+        Array<uint8_t>* byteArray = il2cpp_utils::vectorToArray(mapLoadData->data);
 
         using LoadFromMemory = function_ptr_t<AssetBundle*, Array<uint8_t>*, unsigned int>;
         static LoadFromMemory loadFromMemory = reinterpret_cast<LoadFromMemory>(il2cpp_functions::resolve_icall("UnityEngine.AssetBundle::LoadFromMemory_Internal"));
 
-        mapLoadData.bundle = loadFromMemory(byteArray, 0);
-        mapLoadData.loadState = LoadState::LoadingScene;
-        mapLoadData.moveNext = true;
+        mapLoadData->bundle = loadFromMemory(byteArray, 0);
+        mapLoadData->loadState = LoadState::LoadingScene;
+        mapLoadData->moveNext = true;
     }
 
     void Loader::LoadScene()
     {
-        Array<Il2CppString*>* scenePaths = mapLoadData.bundle->GetAllScenePaths();
+        Array<Il2CppString*>* scenePaths = mapLoadData->bundle->GetAllScenePaths();
         if (!scenePaths) return;
         Il2CppString* scenePath = scenePaths->values[0];
 
@@ -423,8 +431,8 @@ namespace MapLoader
         auto* sceneAsync = SceneManager::LoadSceneAsync(scenePath, LoadSceneMode::Additive);
 
         std::function<void(void)> fun = [&]{
-            mapLoadData.loadState = LoadState::InitializingMap;
-            mapLoadData.moveNext = true;
+            mapLoadData->loadState = LoadState::InitializingMap;
+            mapLoadData->moveNext = true;
         };
 
         auto method = il2cpp_utils::FindMethodUnsafe(sceneAsync, "add_completed", 1);
@@ -500,16 +508,16 @@ namespace MapLoader
         ProcessMap(mapInstance);
 
         ColorTreeTeleporter(Color::get_green());
-        mapDescriptor->gravity = mapLoadData.info.packageInfo->config.gravity;
+        mapDescriptor->gravity = mapLoadData->info.packageInfo->config.gravity;
         
-        mapLoadData.bundle->Unload(false);
-        mapLoadData.bundle = nullptr;
+        mapLoadData->bundle->Unload(false);
+        mapLoadData->bundle = nullptr;
         isLoading = false;
         
-        lobbyName = mapLoadData.info.get_mapString();
+        lobbyName = mapLoadData->info.get_mapString();
 
-        mapLoadData.loadState = LoadState::FixLighting;
-        mapLoadData.moveNext = true;
+        mapLoadData->loadState = LoadState::FixLighting;
+        mapLoadData->moveNext = true;
     }
 
     void Loader::ProcessMap(GameObject* map)
@@ -649,7 +657,7 @@ namespace MapLoader
 
             for (int j = 0; j < materials->size; j++)
             {
-                LightingUtils::SetLightingStrength(materials->items->values[j], 0.25f);
+                LightingUtils::SetLightingStrength(materials->items->values[j], 0.9f);
             }
         }
     }
@@ -657,5 +665,10 @@ namespace MapLoader
     Loader* Loader::get_instance()
     {
         return instance;
+    }
+
+    MapLoadData* Loader::get_LoadData()
+    {
+        return mapLoadData;
     }
 }

@@ -31,6 +31,8 @@ namespace MapLoader
         std::vector<uint8_t> data = {};
         UnityEngine::AssetBundle* bundle = nullptr;
         Il2CppObject* root = nullptr;
+
+        MapLoadData(MapInfo info) : info(info) {};
     };
 }
 
@@ -66,8 +68,10 @@ DECLARE_CLASS_CODEGEN(MapLoader, Loader, UnityEngine::MonoBehaviour,
         static inline GlobalData* globalData = nullptr;
         static inline MapDescriptor* mapDescriptor = nullptr;
         void LoadMap(MapInfo info);
+        static MapLoadData* get_LoadData();
     private:
-        MapLoadData mapLoadData;
+
+        static MapLoadData* mapLoadData;
         static inline Loader* instance = nullptr;
 
     REGISTER_FUNCTION(

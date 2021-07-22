@@ -23,6 +23,7 @@
 #include "UI/MapView.hpp"
 #include "UI/MapSelectorView.hpp"
 #include "UI/MapSelectorViewManager.hpp"
+#include "UI/MapLoaderUtilsView.hpp"
 
 #include "monkecomputer/shared/Register.hpp"
 #include "monkecomputer/shared/GorillaUI.hpp"
@@ -117,7 +118,6 @@ MAKE_HOOK_OFFSETLESS(GorillaComputer_Start, void, GlobalNamespace::GorillaComput
     RoomList* roomList = listGO->AddComponent<RoomList*>();
 
     Object::DontDestroyOnLoad(listGO);
-
     GameObject* countGO = *il2cpp_utils::New<GameObject*>();
     PlayerCountManager* countManager = countGO->AddComponent<PlayerCountManager*>();
 
@@ -359,10 +359,11 @@ extern "C" void load()
 
     custom_types::Register::RegisterType<GorillaMapTriggerBase>();
     custom_types::Register::RegisterTypes<Teleporter, TagZone, Player, ObjectTrigger, RotateByHand, PreviewOrb, SurfaceClimbSettings, RoundEndActions, Loader, MapDescriptor, RoomList, MonkeRoomManager, MovingPlatform>();
-    custom_types::Register::RegisterTypes<MapSelectorView, MapView, MapSelectorViewManager, MapNetworkJoinTrigger>();
+    custom_types::Register::RegisterTypes<MapSelectorView, MapView, MapSelectorViewManager, MapNetworkJoinTrigger, MapLoaderUtilsView>();
 
     GorillaUI::Register::RegisterViewManager<MapSelectorViewManager*>("Map Loader", VERSION);
-
+    GorillaUI::Register::RegisterWatchView<MapLoaderUtilsView*>("Map Utils", VERSION);
+    
     getLogger().info("Mod loaded!");
 }
 
