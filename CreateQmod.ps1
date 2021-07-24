@@ -17,8 +17,12 @@ $allLibs = Get-ChildItem ./libs/arm64-v8a/*.so | Select -Expand Name
 $libs = @()
 
 $cover = "./" + $modJson.coverImage
+$fileList = @($mod)
 
-$fileList = @($cover, $mod)
+if (-not $cover -eq "./")
+{
+    $fileList += ,$cover
+}
 
 $bannedLibList = @("modloader", "codegen", "gorilla-utils", "monkecomputer")
 
