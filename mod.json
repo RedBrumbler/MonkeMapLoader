@@ -1,36 +1,40 @@
 {
-    "_QPVersion": "0.1.0",
-    "name": "Monke Map Loader",
-    "id": "MonkeMapLoader",
-    "author": "RedBrumbler",
-    "version": "1.1.0",
-    "packageId": "com.AnotherAxiom.GorillaTag",
-    "packageVersion": "1.0.8",
-    "type": "Gameplay",
-    "dependencies": [
-        {
-            "id": "MonkeComputer",
-            "version": ">=1.4.1",
-            "downloadIfMissing": "https://github.com/RedBrumbler/MonkeComputer/releases/latest/download/MonkeComputer.qmod"
-        }
-    ],
-    "modFiles": [
-        "libmonkemaploader.so"
-    ],
-    "libraryFiles": [
-    ],
-    "fileCopies": [
-        {
-            "name": "Orb",
-            "destination": "/sdcard/ModData/com.AnotherAxiom.GorillaTag/Mods/MonkeMapLoader/Orb"
-        },
-        {
-            "name": "Teleporter",
-            "destination": "/sdcard/ModData/com.AnotherAxiom.GorillaTag/Mods/MonkeMapLoader/Teleporter"
-        },
-        {
-            "name": "Bobbie_gkz_beginnerblock.gtmap",
-            "destination": "/sdcard/ModData/com.AnotherAxiom.GorillaTag/Mods/MonkeMapLoader/CustomMaps/Bobbie_gkz_beginnerblock.gtmap"
-        }
-    ]
+  "_QPVersion": "0.1.0",
+  "name": "Monke Map Loader",
+  "id": "MonkeMapLoader",
+  "author": "RedBrumbler",
+  "version": "1.1.0",
+  "packageId": "com.AnotherAxiom.GorillaTag",
+  "packageVersion": "1.0.10",
+  "type": "Gameplay",
+  "dependencies": [
+    {
+      "id": "MonkeComputer",
+      "version": ">=1.6.0",
+      "downloadIfMissing": "https://github.com/RedBrumbler/MonkeComputer/releases/download/v1.6.0/MonkeComputer.qmod"
+    }
+  ],
+  "modFiles": [
+    "libmonkemaploader.so"
+  ],
+  "libraryFiles": [
+    "libbeatsaber-hook_2_1_4.so",
+    "libcustom-types.so",
+    "libquest-cosmetic-loader_0_2_1.so",
+    "libzip.so"
+  ],
+  "fileCopies": [
+    {
+      "name": "Orb",
+      "destination": "/sdcard/ModData/com.AnotherAxiom.GorillaTag/Mods/MonkeMapLoader/Orb"
+    },
+    {
+      "name": "Teleporter",
+      "destination": "/sdcard/ModData/com.AnotherAxiom.GorillaTag/Mods/MonkeMapLoader/Teleporter"
+    },
+    {
+      "name": "Bobbie_gkz_beginnerblock.gtmap",
+      "destination": "/sdcard/ModData/com.AnotherAxiom.GorillaTag/Mods/MonkeMapLoader/CustomMaps/Bobbie_gkz_beginnerblock.gtmap"
+    }
+  ]
 }

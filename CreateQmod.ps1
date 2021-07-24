@@ -20,7 +20,7 @@ $cover = "./" + $modJson.coverImage
 
 $fileList = @($cover, $mod)
 
-$bannedLibList = @("modloader")
+$bannedLibList = @("modloader", "codegen", "gorilla-utils", "monkecomputer")
 
 $modlib = @()
 
@@ -59,6 +59,8 @@ foreach ($lib in $allLibs)
 
 $extraFiles = @()
 
+$bannedFiles = @("beginnerblock")
+
 if (Test-Path "./ExtraFiles")
 {
     $extraEntries = Get-ChildItem ./ExtraFiles/* -Recurse
@@ -67,6 +69,21 @@ if (Test-Path "./ExtraFiles")
     {
         $mode = $entry | Select -Expand Mode
         if ($mode.Contains("d"))
+        {
+            continue
+        }
+
+        $doContinue = 0
+        foreach ($ban in $bannedFiles)
+        {
+            if ($entry.Name.Contains($ban))
+            {
+                $doContinue = 1
+                break
+            }
+        }
+
+        if ($doContinue)
         {
             continue
         }
@@ -120,8 +137,10 @@ if (Test-Path $qmod)
 {
     move-item -Force $qmod $zip
 }
+
 $msg = "Creating qmod for module " + $env:module_id + " With name " + $qmod
 echo $msg
+echo $fileList
 Compress-Archive -Path $fileList -DestinationPath $zip -Update
 
 & move-item -Force $zip $qmod
