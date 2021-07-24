@@ -3,7 +3,7 @@
 #include "UnityEngine/GameObject.hpp"
 #include "GorillaLocomotion/Surface.hpp"
 
-DEFINE_TYPE(MapLoader::SurfaceClimbSettings);
+DEFINE_TYPE(MapLoader, SurfaceClimbSettings);
 
 using namespace UnityEngine;
 using namespace GorillaLocomotion;

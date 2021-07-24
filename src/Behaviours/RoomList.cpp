@@ -5,7 +5,7 @@
 #include "Photon/Realtime/ILobbyCallbacks.hpp"
 #include "Photon/Pun/PhotonNetwork.hpp"
 
-DEFINE_TYPE(MapLoader::RoomList);
+DEFINE_TYPE(MapLoader, RoomList);
 
 using namespace UnityEngine;
 using namespace Photon::Pun;

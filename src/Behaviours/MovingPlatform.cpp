@@ -8,7 +8,7 @@
 #include "GlobalNamespace/GorillaTriggerColliderHandIndicator.hpp"
 #include "GorillaLocomotion/Player.hpp"
 
-DEFINE_TYPE(MapLoader::MovingPlatform);
+DEFINE_TYPE(MapLoader, MovingPlatform);
 
 using namespace UnityEngine;
 

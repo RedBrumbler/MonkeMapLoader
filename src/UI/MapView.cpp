@@ -5,7 +5,7 @@
 #include "cpp-semver/include/cpp-semver.hpp"
 #include "static-defines.hpp"
 
-DEFINE_TYPE(MapLoader::MapView);
+DEFINE_TYPE(MapLoader, MapView);
 
 extern Logger& getLogger();
 

@@ -25,9 +25,9 @@ using RegionToMap = std::map<std::string, MapToCount>;
 
 DECLARE_CLASS_CODEGEN(MapLoader, MonkeRoomManager, Il2CppObject,
         DECLARE_CTOR(ctor);
-        DECLARE_METHOD(static MonkeRoomManager*, get_instance);
-        DECLARE_METHOD(void, OnConnectedToMaster);        
-        DECLARE_METHOD(void, OnRoomListUpdate, List<Photon::Realtime::RoomInfo*>*);        
+        DECLARE_STATIC_METHOD(MonkeRoomManager*, get_instance);
+        DECLARE_INSTANCE_METHOD(void, OnConnectedToMaster);        
+        DECLARE_INSTANCE_METHOD(void, OnRoomListUpdate, List<Photon::Realtime::RoomInfo*>*);        
         DECLARE_STATIC_FIELD(int, updateCounter);
 
         public:
@@ -38,12 +38,4 @@ DECLARE_CLASS_CODEGEN(MapLoader, MonkeRoomManager, Il2CppObject,
             static inline std::vector<std::string>* checkedRegions = nullptr;
             static inline std::vector<RoomInfoData> roomListCache = {};
             static inline RegionToMap MapsInRegion = {};
-
-    REGISTER_FUNCTION(
-        REGISTER_METHOD(ctor);
-        REGISTER_METHOD(get_instance);
-        REGISTER_METHOD(OnConnectedToMaster);
-        REGISTER_METHOD(OnRoomListUpdate);
-        REGISTER_FIELD(updateCounter);
-    )
 )

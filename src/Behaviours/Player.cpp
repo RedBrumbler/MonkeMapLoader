@@ -9,7 +9,7 @@
 
 #include "GorillaLocomotion/Player.hpp"
 
-DEFINE_TYPE(MapLoader::Player);
+DEFINE_TYPE(MapLoader, Player);
 
 extern Logger& getLogger();
 

@@ -1,5 +1,6 @@
 #include "modloader/shared/modloader.hpp"
 #include "beatsaber-hook/shared/utils/logging.hpp"
+#include "beatsaber-hook/shared/utils/hooking.hpp"
 #include "beatsaber-hook/shared/utils/utils.h"
 #include "quest-cosmetic-loader/shared/CosmeticLoader.hpp"
 #include <thread>
@@ -72,6 +73,9 @@
 #include "ExitGames/Client/Photon/SendOptions.hpp"
 #include "ExitGames/Client/Photon/Hashtable.hpp"
 
+#include "gorilla-utils/shared/Callbacks/LobbyCallbacks.hpp"
+#include "gorilla-utils/shared/Callbacks/ConnectionCallbacks.hpp"
+#include "gorilla-utils/shared/Callbacks/MatchMakingCallbacks.hpp"
 ModInfo modInfo;
 
 Logger& getLogger()
@@ -86,13 +90,13 @@ using namespace CosmeticsLoader;
 using namespace MapLoader;
 using namespace UnityEngine;
 
-MAKE_HOOK_OFFSETLESS(Player_Awake, void, GorillaLocomotion::Player* self)
+MAKE_HOOK_MATCH(Player_Awake, &GorillaLocomotion::Player::Awake, void, GorillaLocomotion::Player* self)
 {
     Player_Awake(self);
     self->get_gameObject()->AddComponent<MapLoader::Player*>();
 }
 
-MAKE_HOOK_OFFSETLESS(GorillaComputer_Start, void, GlobalNamespace::GorillaComputer* self)
+MAKE_HOOK_MATCH(GorillaComputer_Start, &GlobalNamespace::GorillaComputer::Start, void, GlobalNamespace::GorillaComputer* self)
 {
     if (!MonkeRoomManager::get_instance()) il2cpp_utils::New<MonkeRoomManager*>();
 
@@ -125,7 +129,7 @@ MAKE_HOOK_OFFSETLESS(GorillaComputer_Start, void, GlobalNamespace::GorillaComput
     */
 }
 
-MAKE_HOOK_OFFSETLESS(Player_GetSlidePercentage, float, GorillaLocomotion::Player* self, RaycastHit raycastHit)
+MAKE_HOOK_MATCH(Player_GetSlidePercentage, &GorillaLocomotion::Player::GetSlidePercentage, float, GorillaLocomotion::Player* self, RaycastHit raycastHit)
 {
     Collider* collider = raycastHit.get_collider();
     GameObject* go = collider->get_gameObject();
@@ -154,7 +158,7 @@ MAKE_HOOK_OFFSETLESS(Player_GetSlidePercentage, float, GorillaLocomotion::Player
 }
 
 static double lastGameEnd = 0.0;
-MAKE_HOOK_OFFSETLESS(VRRig_PlayTagSound, void, GlobalNamespace::VRRig* self, int soundIndex)
+MAKE_HOOK_MATCH(VRRig_PlayTagSound, &GlobalNamespace::VRRig::PlayTagSound, void, GlobalNamespace::VRRig* self, int soundIndex)
 {
     using namespace GlobalNamespace;
     VRRig_PlayTagSound(self, soundIndex);
@@ -216,7 +220,7 @@ MAKE_HOOK_OFFSETLESS(VRRig_PlayTagSound, void, GlobalNamespace::VRRig* self, int
     }
 }
 
-MAKE_HOOK_OFFSETLESS(GorillaTagManager_ReportTag, void, GlobalNamespace::GorillaTagManager* self, Photon::Realtime::Player* taggedPlayer, Photon::Realtime::Player* taggingPlayer)
+MAKE_HOOK_MATCH(GorillaTagManager_ReportTag, &GlobalNamespace::GorillaTagManager::ReportTag, void, GlobalNamespace::GorillaTagManager* self, Photon::Realtime::Player* taggedPlayer, Photon::Realtime::Player* taggingPlayer)
 {
     using namespace Photon::Pun;
     using namespace Photon::Realtime;
@@ -284,15 +288,9 @@ MAKE_HOOK_OFFSETLESS(GorillaTagManager_ReportTag, void, GlobalNamespace::Gorilla
     }
 }
 
-MAKE_HOOK_OFFSETLESS(MatchMakingCallbacksContainer_OnJoinedRoom, void, Photon::Realtime::MatchMakingCallbacksContainer* self)
-{
-    MatchMakingCallbacksContainer_OnJoinedRoom(self);
-    getLogger().info("OnJoinedRoom Callback");
-}
-
 // forced region patch
 std::string patchForcedRegion = "";
-MAKE_HOOK_OFFSETLESS(PhotonNetworkController_GetRegionWithLowestPing, Il2CppString*, GlobalNamespace::PhotonNetworkController* self)
+MAKE_HOOK_MATCH(PhotonNetworkController_GetRegionWithLowestPing, &GlobalNamespace::PhotonNetworkController::GetRegionWithLowestPing, Il2CppString*, GlobalNamespace::PhotonNetworkController* self)
 {
     Il2CppString* resultCS = PhotonNetworkController_GetRegionWithLowestPing(self);
 
@@ -306,27 +304,6 @@ MAKE_HOOK_OFFSETLESS(PhotonNetworkController_GetRegionWithLowestPing, Il2CppStri
     }
 
     return il2cpp_utils::createcsstr(result);
-}
-
-MAKE_HOOK_OFFSETLESS(ConnectionCallbacksContainer_OnConnectedToMaster, void, Photon::Realtime::ConnectionCallbacksContainer* self)
-{
-    ConnectionCallbacksContainer_OnConnectedToMaster(self);
-
-    if (!MonkeRoomManager::get_instance()) il2cpp_utils::New<MonkeRoomManager*>();
-
-    // we do some onconnectedtomaster
-    MonkeRoomManager::get_instance()->OnConnectedToMaster();
-
-}
-
-MAKE_HOOK_OFFSETLESS(LobbyCallbacksContainer_OnRoomListUpdate, void, Photon::Realtime::LobbyCallbacksContainer* self, List<Photon::Realtime::RoomInfo*>* roomList)
-{
-    LobbyCallbacksContainer_OnRoomListUpdate(self, roomList);
-
-    if (!MonkeRoomManager::get_instance()) il2cpp_utils::New<MonkeRoomManager*>();
-
-    MonkeRoomManager::get_instance()->OnRoomListUpdate(roomList);
-    // we do some OnRoomListUpdate
 }
 
 extern "C" void setup(ModInfo& info)
@@ -345,25 +322,31 @@ extern "C" void load()
     std::string mapDir = "/sdcard/ModData/com.AnotherAxiom.GorillaTag/Mods/MonkeMapLoader/CustomMaps/";
     FileUtils::mkdir(mapDir);
 
-    INSTALL_HOOK_OFFSETLESS(getLogger(), GorillaComputer_Start, il2cpp_utils::FindMethodUnsafe("", "GorillaComputer", "Start", 0));
-    INSTALL_HOOK_OFFSETLESS(getLogger(), Player_Awake, il2cpp_utils::FindMethodUnsafe("GorillaLocomotion", "Player", "Awake", 0));
-    INSTALL_HOOK_OFFSETLESS(getLogger(), Player_GetSlidePercentage, il2cpp_utils::FindMethodUnsafe("GorillaLocomotion", "Player", "GetSlidePercentage", 1));
-    INSTALL_HOOK_OFFSETLESS(getLogger(), VRRig_PlayTagSound, il2cpp_utils::FindMethodUnsafe("", "VRRig", "PlayTagSound", 1));
-    INSTALL_HOOK_OFFSETLESS(getLogger(), GorillaTagManager_ReportTag, il2cpp_utils::FindMethodUnsafe("", "GorillaTagManager", "ReportTag", 2));
-    INSTALL_HOOK_OFFSETLESS(getLogger(), MatchMakingCallbacksContainer_OnJoinedRoom, il2cpp_utils::FindMethodUnsafe("Photon.Realtime", "MatchMakingCallbacksContainer", "OnJoinedRoom", 0));
-    INSTALL_HOOK_OFFSETLESS(getLogger(), PhotonNetworkController_GetRegionWithLowestPing, il2cpp_utils::FindMethodUnsafe("", "PhotonNetworkController", "GetRegionWithLowestPing", 0));
-    INSTALL_HOOK_OFFSETLESS(getLogger(), ConnectionCallbacksContainer_OnConnectedToMaster, il2cpp_utils::FindMethodUnsafe("Photon.Realtime", "ConnectionCallbacksContainer", "OnConnectedToMaster", 0));
-    INSTALL_HOOK_OFFSETLESS(getLogger(), LobbyCallbacksContainer_OnRoomListUpdate, il2cpp_utils::FindMethodUnsafe("Photon.Realtime", "LobbyCallbacksContainer", "OnRoomListUpdate", 1));
+    Logger& logger = getLogger();
+    INSTALL_HOOK(logger, GorillaComputer_Start);
+    INSTALL_HOOK(logger, Player_Awake);
+    INSTALL_HOOK(logger, Player_GetSlidePercentage);
+    INSTALL_HOOK(logger, VRRig_PlayTagSound);
+    INSTALL_HOOK(logger, GorillaTagManager_ReportTag);
+    INSTALL_HOOK(logger, PhotonNetworkController_GetRegionWithLowestPing);
 
     using namespace MapLoader;
 
-    custom_types::Register::RegisterType<GorillaMapTriggerBase>();
-    custom_types::Register::RegisterTypes<Teleporter, TagZone, Player, ObjectTrigger, RotateByHand, PreviewOrb, SurfaceClimbSettings, RoundEndActions, Loader, MapDescriptor, RoomList, MonkeRoomManager, MovingPlatform>();
-    custom_types::Register::RegisterTypes<MapSelectorView, MapView, MapSelectorViewManager, MapNetworkJoinTrigger, MapLoaderUtilsView>();
+    custom_types::Register::AutoRegister();
 
     GorillaUI::Register::RegisterViewManager<MapSelectorViewManager*>("Map Loader", VERSION);
     GorillaUI::Register::RegisterWatchView<MapLoaderUtilsView*>("Map Utils", VERSION);
     
+    GorillaUtils::LobbyCallbacks::onRoomListUpdateEvent() += [](List<Photon::Realtime::RoomInfo*>* roomList) -> void {
+        if (!MonkeRoomManager::get_instance()) il2cpp_utils::New<MonkeRoomManager*>();
+        MonkeRoomManager::get_instance()->OnRoomListUpdate(roomList);
+    };
+
+    GorillaUtils::ConnectionCallbacks::onConnectedToMasterEvent() += []() -> void {
+        if (!MonkeRoomManager::get_instance()) il2cpp_utils::New<MonkeRoomManager*>();
+        MonkeRoomManager::get_instance()->OnConnectedToMaster();
+    };
+
     getLogger().info("Mod loaded!");
 }
 

@@ -34,7 +34,7 @@
 #include "Utils/LightingUtils.hpp"
 
 #include "MapEventCallbacks.hpp"
-DEFINE_TYPE(MapLoader::Loader);
+DEFINE_TYPE(MapLoader, Loader);
 
 extern Logger& getLogger();
 
@@ -46,9 +46,6 @@ extern bool getSceneName(Scene scene, std::string& out);
 
 namespace MapLoader
 {
-    GameObject* Loader::mapInstance = nullptr;
-    bool Loader::isLoading = false;
-    bool Loader::isMoved = false;
     MapLoadData* Loader::mapLoadData = nullptr;
 
     void Loader::ctor()
@@ -88,13 +85,13 @@ namespace MapLoader
 
     void Loader::UnloadMap()
     {
-        if (mapInstance)
+        if (mapInstance())
         {
             lobbyName = "";
             
-            Object::Destroy(mapInstance);
+            Object::Destroy(mapInstance());
             
-            mapInstance = nullptr;
+            mapInstance() = nullptr;
             
             ColorTreeTeleporter(Color::get_red());
 
@@ -283,9 +280,9 @@ namespace MapLoader
             /// Get All Objects Of Type GameObject
             Array<GameObject*>* allObjects = Resources::FindObjectsOfTypeAll<GameObject*>();
             // if not null
-            if (allObjects && !isMoved)
+            if (allObjects && !isMoved())
             {
-                isMoved = true;
+                isMoved() = true;
                 // for each
                 for (int j = 0; j < allObjects->Length(); j++)
                 {
@@ -343,9 +340,9 @@ namespace MapLoader
         /// Get All Objects Of Type GameObject
         Array<GameObject*>* allObjects = Resources::FindObjectsOfTypeAll<GameObject*>();
         // if not null
-        if (allObjects && isMoved)
+        if (allObjects && isMoved())
         {
-            isMoved = false;
+            isMoved() = false;
             // for each
             for (int j = 0; j < allObjects->Length(); j++)
             {
@@ -369,9 +366,9 @@ namespace MapLoader
 
     void Loader::LoadMap(MapInfo info)
     {
-        if (isLoading) return;
+        if (isLoading()) return;
         if (mapLoadData && mapLoadData->info.filePath == info.filePath) return;
-        isLoading = true;
+        isLoading() = true;
         UnloadMap();
 
         if (!mapLoadData) mapLoadData = new MapLoadData(info); 
@@ -512,7 +509,7 @@ namespace MapLoader
         
         mapLoadData->bundle->Unload(false);
         mapLoadData->bundle = nullptr;
-        isLoading = false;
+        isLoading() = false;
         
         lobbyName = mapLoadData->info.get_mapString();
 
@@ -522,10 +519,10 @@ namespace MapLoader
 
     void Loader::ProcessMap(GameObject* map)
     {
-        mapInstance = map;
+        mapInstance() = map;
         Transform* mapTransform = map->get_transform();
 
-        mapDescriptor = mapInstance->AddComponent<MapDescriptor*>();
+        mapDescriptor = mapInstance()->AddComponent<MapDescriptor*>();
         // initializes all the components to be added (due to quest bundles not getting MBs)
         mapDescriptor->Initialize();
      
@@ -648,7 +645,7 @@ namespace MapLoader
 
     void Loader::FixLighting()
     {
-        Array<MeshRenderer*>* renderers = mapInstance->GetComponentsInChildren<MeshRenderer*>();
+        Array<MeshRenderer*>* renderers = mapInstance()->GetComponentsInChildren<MeshRenderer*>();
 
         for (int i = 0; i < renderers->Length(); i++)
         {

@@ -1,6 +1,6 @@
 #include "Behaviours/RotateByHand.hpp"
 
-DEFINE_TYPE(MapLoader::RotateByHand);
+DEFINE_TYPE(MapLoader, RotateByHand);
 
 #include "UnityEngine/Collider.hpp"
 #include "UnityEngine/Bounds.hpp"

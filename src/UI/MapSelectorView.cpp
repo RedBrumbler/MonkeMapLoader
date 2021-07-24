@@ -17,7 +17,7 @@
 
 #include "Behaviours/RoomList.hpp"
 
-DEFINE_TYPE(MapLoader::MapSelectorView);
+DEFINE_TYPE(MapLoader, MapSelectorView);
 
 extern Logger& getLogger();
 

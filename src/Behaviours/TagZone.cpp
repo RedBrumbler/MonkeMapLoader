@@ -10,7 +10,7 @@
 #include "GlobalNamespace/GorillaTagManager.hpp"
 #include "GlobalNamespace/GorillaGameManager.hpp"
 
-DEFINE_TYPE(MapLoader::TagZone);
+DEFINE_TYPE(MapLoader, TagZone);
 
 
 namespace MapLoader

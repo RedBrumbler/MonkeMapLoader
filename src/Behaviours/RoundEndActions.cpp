@@ -3,7 +3,7 @@
 
 #include "UnityEngine/Resources.hpp"
 
-DEFINE_TYPE(MapLoader::RoundEndActions);
+DEFINE_TYPE(MapLoader, RoundEndActions);
 
 #include "MapEventCallbacks.hpp"
 

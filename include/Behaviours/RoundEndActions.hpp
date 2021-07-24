@@ -14,15 +14,7 @@ namespace MapLoader
 DECLARE_CLASS_CODEGEN(MapLoader, RoundEndActions, UnityEngine::MonoBehaviour,
     DECLARE_CTOR(ctor);
     DECLARE_INSTANCE_FIELD(bool, respawnOnRoundEnd);
-    DECLARE_METHOD(static void, RoundEnd);
+    DECLARE_STATIC_METHOD(void, RoundEnd);
     DECLARE_INSTANCE_FIELD(List<UnityEngine::GameObject*>*, objectsToEnable);
     DECLARE_INSTANCE_FIELD(List<UnityEngine::GameObject*>*, objectsToDisable);
-
-    REGISTER_FUNCTION(
-        REGISTER_METHOD(ctor);
-        REGISTER_METHOD(RoundEnd);
-        REGISTER_FIELD(respawnOnRoundEnd);
-        REGISTER_FIELD(objectsToEnable);
-        REGISTER_FIELD(objectsToDisable);
-    )
 )

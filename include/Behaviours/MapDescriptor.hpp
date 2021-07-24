@@ -21,9 +21,9 @@ typedef struct RegisteredBehaviour {
 } RegisteredBehaviour;
 
 DECLARE_CLASS_CODEGEN(MapLoader, MapDescriptor, UnityEngine::MonoBehaviour,
-        DECLARE_METHOD(void, Awake);
-        DECLARE_METHOD(void, Initialize);
-        DECLARE_METHOD(static bool, CanBeDescriptor, UnityEngine::GameObject* go);
+        DECLARE_INSTANCE_METHOD(void, Awake);
+        DECLARE_INSTANCE_METHOD(void, Initialize);
+        DECLARE_STATIC_METHOD(bool, CanBeDescriptor, UnityEngine::GameObject* go);
         DECLARE_INSTANCE_FIELD(float, gravity);
 
         public:
@@ -31,11 +31,4 @@ DECLARE_CLASS_CODEGEN(MapLoader, MapDescriptor, UnityEngine::MonoBehaviour,
 
             void RegisterBehaviour(std::string filter, SerializedBehaviourCallback callback);
             bool CheckRegisteredCallbacks(UnityEngine::GameObject* first, std::string second);
-
-    REGISTER_FUNCTION(
-        REGISTER_METHOD(Awake);
-        REGISTER_METHOD(Initialize);
-        REGISTER_METHOD(CanBeDescriptor);
-        REGISTER_FIELD(gravity);
-    )
 )

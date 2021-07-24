@@ -6,7 +6,7 @@
 #include "GlobalNamespace/GorillaTriggerColliderHandIndicator.hpp"
 #include "GorillaLocomotion/Player.hpp"
 
-DEFINE_TYPE(MapLoader::GorillaMapTriggerBase);
+DEFINE_TYPE(MapLoader, GorillaMapTriggerBase);
 
 extern Logger& getLogger();
 

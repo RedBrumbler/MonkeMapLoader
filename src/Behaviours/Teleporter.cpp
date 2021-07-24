@@ -6,7 +6,7 @@
 
 #include "UnityEngine/GameObject.hpp"
 
-DEFINE_TYPE(MapLoader::Teleporter);
+DEFINE_TYPE(MapLoader, Teleporter);
 
 using namespace UnityEngine;
 

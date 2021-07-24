@@ -13,13 +13,10 @@ namespace MapLoader
 }
 
 DECLARE_CLASS_CODEGEN(MapLoader, PreviewOrb, UnityEngine::MonoBehaviour,
-    DECLARE_METHOD(void, Start);
+    DECLARE_INSTANCE_METHOD(void, Start);
     
     public:
         static inline PreviewOrb* instance = nullptr;
         static void ChangeOrb(UnityEngine::Color color, UnityEngine::Texture2D* texture);
         static void ChangeOrb(MapInfo& info);
-    REGISTER_FUNCTION(
-        REGISTER_METHOD(Start);
-    )
 )

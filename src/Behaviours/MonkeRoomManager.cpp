@@ -1,6 +1,6 @@
 #include "Behaviours/MonkeRoomManager.hpp"
 
-DEFINE_TYPE(MapLoader::MonkeRoomManager);
+DEFINE_TYPE(MapLoader, MonkeRoomManager);
 
 #include <vector>
 
@@ -59,15 +59,13 @@ RoomInfoData::RoomInfoData(RoomInfo* roomInfo, std::string region) : RoomInfoDat
 
 namespace MapLoader
 {
-    int MonkeRoomManager::updateCounter = 0;
-
     void MonkeRoomManager::ctor()
     {
         //roomListCache = *il2cpp_utils::New<List<RoomRegionInfo*>*>();
         //roomListCache->Clear();
         instance = this;
         forcedRegion = "none";
-        updateCounter = 0;
+        updateCounter() = 0;
         checkedRegions = nullptr;
     }
 
@@ -209,12 +207,12 @@ namespace MapLoader
             }
         }
 
-        updateCounter ++;
-        getLogger().info("update Counter: %d", updateCounter);
+        updateCounter() ++;
+        getLogger().info("update Counter: %d", updateCounter());
         // every n cycles, update all room data
-        if (updateCounter % 20 == 0)
+        if (updateCounter() % 20 == 0)
         {
-            updateCounter = 0;
+            updateCounter() = 0;
             getLogger().info("Updating all regions in room list cache");
 
             roomListCache.clear();
@@ -279,7 +277,7 @@ namespace MapLoader
 
         Il2CppString* currentRegionCS = PhotonNetworkController::_get_instance()->GetRegionWithLowestPing();
         std::string currentRegion = currentRegionCS ? to_utf8(csstrtostr(currentRegionCS)) : "";
-        getLogger().info("Current Best Ping region: %s\nsearching in %d rooms for map: %s", currentRegion.c_str(), roomListCache.size(), mapName.c_str());
+        getLogger().info("Current Best Ping region: %s\nsearching in %lu rooms for map: %s", currentRegion.c_str(), roomListCache.size(), mapName.c_str());
 
         RoomInfoData* candidate = nullptr;
         bool wasBest = false;

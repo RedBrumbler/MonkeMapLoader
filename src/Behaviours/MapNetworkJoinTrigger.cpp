@@ -4,7 +4,7 @@
 #include "GlobalNamespace/PhotonNetworkController.hpp"
 #include "GlobalNamespace/GorillaLevelScreen.hpp"
 
-DEFINE_TYPE(MapLoader::MapNetworkJoinTrigger);
+DEFINE_TYPE(MapLoader, MapNetworkJoinTrigger);
 
 using namespace UnityEngine;
 namespace MapLoader

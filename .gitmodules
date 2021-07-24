@@ -1,0 +1,4 @@
+[submodule "include/cpp-semver"]
+	path = include/cpp-semver
+	url = https://github.com/easz/cpp-semver
+	branch = master

@@ -3,15 +3,17 @@
   "dependenciesDir": "extern",
   "info": {
     "name": "MonkeMapLoader",
-    "id": "MonkeMapLoader",
-    "version": "0.1.0",
+    "id": "monkemaploader",
+    "version": "1.1.0",
     "url": null,
-    "additionalData": {}
+    "additionalData": {
+      "overrideSoName": "libmonkemaploader.so"
+    }
   },
   "dependencies": [
     {
       "id": "beatsaber-hook",
-      "versionRange": "^1.0.0",
+      "versionRange": "^2.1.0",
       "additionalData": {
         "extraFiles": [
           "src/inline-hook"
@@ -20,7 +22,7 @@
     },
     {
       "id": "custom-types",
-      "versionRange": "^0.8.3",
+      "versionRange": "*",
       "additionalData": {}
     },
     {
@@ -35,6 +37,11 @@
     },
     {
       "id": "monkecodegen",
+      "versionRange": "*",
+      "additionalData": {}
+    },
+    {
+      "id": "gorilla-utils",
       "versionRange": "*",
       "additionalData": {}
     }

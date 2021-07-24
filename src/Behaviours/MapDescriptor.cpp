@@ -17,7 +17,7 @@
 #include "GlobalNamespace/GorillaScoreboardSpawner.hpp"
 #include "GlobalNamespace/GorillaScoreBoard.hpp"
 
-DEFINE_TYPE(MapLoader::MapDescriptor);
+DEFINE_TYPE(MapLoader, MapDescriptor);
 
 extern Logger& getLogger();
 

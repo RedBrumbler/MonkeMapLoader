@@ -7,7 +7,7 @@
 #include "UnityEngine/Transform.hpp"
 #include "UnityEngine/GameObject.hpp"
 
-DEFINE_TYPE(MapLoader::MapLoaderUtilsView);
+DEFINE_TYPE(MapLoader, MapLoaderUtilsView);
 
 using namespace GorillaUI;
 using namespace UnityEngine;
@@ -82,7 +82,7 @@ namespace MapLoader
 
     void MapLoaderUtilsView::TeleportToMap()
     {
-        if (Loader::isMoved || !Loader::mapInstance) return;
+        if (Loader::isMoved() || !Loader::mapInstance()) return;
         static Il2CppString* spawnPointContainerName = il2cpp_utils::createcsstr("SpawnPointContainer", il2cpp_utils::StringType::Manual);
         GameObject* spawnPointContainer = GameObject::Find(spawnPointContainerName);
 
@@ -100,7 +100,7 @@ namespace MapLoader
 
     void MapLoaderUtilsView::TeleportFromMap()
     {
-        if (!Loader::isMoved || !Loader::globalData) return;
+        if (!Loader::isMoved() || !Loader::globalData) return;
 
         Transform* treePointTransform = nullptr;
         if (!Loader::globalData->bigTreePoint)

@@ -1,6 +1,6 @@
 #include "Behaviours/ObjectTrigger.hpp"
 
-DEFINE_TYPE(MapLoader::ObjectTrigger);
+DEFINE_TYPE(MapLoader, ObjectTrigger);
 
 extern Logger& getLogger();
 using namespace UnityEngine;

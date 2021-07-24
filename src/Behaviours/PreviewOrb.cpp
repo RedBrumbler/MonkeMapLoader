@@ -4,7 +4,7 @@
 #include "UnityEngine/Renderer.hpp"
 #include "UnityEngine/Material.hpp"
 
-DEFINE_TYPE(MapLoader::PreviewOrb);
+DEFINE_TYPE(MapLoader, PreviewOrb);
 
 using namespace UnityEngine;
 
