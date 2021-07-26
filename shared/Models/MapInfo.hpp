@@ -13,7 +13,7 @@ namespace MapLoader
             std::string get_mapString();
             void Load();
             UnityEngine::Texture2D* LoadCubeMap();
-            std::string filePath = "";
+            std::string filePath;
             MapPackageInfo* packageInfo;
     };
 }

@@ -28,7 +28,7 @@ namespace MapLoader
 
         // check wether the map plugin version is higher than the map info 
         static std::string pluginVersionStatic = pluginVersion;
-        isUpdated = mapInfo ? semver::satisfies(pluginVersionStatic, "^" + ((MapInfo*)mapInfo)->packageInfo->androidRequiredVersion) : false;
+        isUpdated = mapInfo ? semver::satisfies(pluginVersionStatic, "^" + ((MapInfo*)mapInfo)->packageInfo->descriptor.androidRequiredVersion) : false;
         
         // get any missing mod IDs
         missingModIDs = mapInfo ? ((MapInfo*)mapInfo)->packageInfo->config.GetMissingModIDs() : std::vector<std::string>{};
@@ -162,7 +162,7 @@ namespace MapLoader
             text += "\n  Your map loader is outdated,";
             text += "\n  please update it!";
             text += "\n  This map will not be allowed to be loaded";
-            text += string_format("\n  Required: %s", ((MapInfo*)mapInfo)->packageInfo->androidRequiredVersion.c_str());
+            text += string_format("\n  Required: %s", ((MapInfo*)mapInfo)->packageInfo->descriptor.androidRequiredVersion.c_str());
             text += string_format("\n  You Have: %s", pluginVersion);
         }
 

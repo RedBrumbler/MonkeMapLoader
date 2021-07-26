@@ -11,13 +11,13 @@ MAKE_AUTO_HOOK_MATCH(GorillaTagManager_Awake, &GorillaTagManager::Awake, void, G
 {
     GorillaTagManager_Awake(self);
 
-    MapLoader::MapConfig* config;
-    if (MapLoader::PlayerMoveSpeedHook::get_needToSet() && (config = MapLoader::PlayerMoveSpeedHook::get_config()))
+    if (MapLoader::PlayerMoveSpeedHook::get_needToSet())
     {
-        self->slowJumpLimit = config->slowJumpLimit;
-        self->fastJumpLimit = config->fastJumpLimit;
-        self->slowJumpMultiplier = config->slowJumpMultiplier;
-        self->fastJumpMultiplier = config->fastJumpMultiplier;
+        MapLoader::MapConfig config = MapLoader::PlayerMoveSpeedHook::get_config();
+        self->slowJumpLimit = config.slowJumpLimit;
+        self->fastJumpLimit = config.fastJumpLimit;
+        self->slowJumpMultiplier = config.slowJumpMultiplier;
+        self->fastJumpMultiplier = config.fastJumpMultiplier;
     }
 
     auto player = GorillaLocomotion::Player::_get__instance();
@@ -28,7 +28,7 @@ MAKE_AUTO_HOOK_MATCH(GorillaTagManager_Awake, &GorillaTagManager::Awake, void, G
 namespace MapLoader
 {
     bool PlayerMoveSpeedHook::needToSet = false;
-    MapConfig* PlayerMoveSpeedHook::config = nullptr;
+    MapConfig PlayerMoveSpeedHook::config;
 
     void PlayerMoveSpeedHook::SetSpeed(MapConfig* mapConfig)
     {
@@ -46,7 +46,7 @@ namespace MapLoader
         return false;
     }
 
-    MapConfig* PlayerMoveSpeedHook::get_config()
+    MapConfigA PlayerMoveSpeedHook::get_config()
     {
         return config;
     }

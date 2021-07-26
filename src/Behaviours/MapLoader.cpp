@@ -34,6 +34,9 @@
 #include "Utils/LightingUtils.hpp"
 
 #include "MapEvents.hpp"
+
+#include "Hooks/PlayerMoveSpeedHook.hpp"
+
 DEFINE_TYPE(MapLoader, Loader);
 
 extern Logger& getLogger();
@@ -277,6 +280,7 @@ namespace MapLoader
             static SetGravity set_gravity = reinterpret_cast<SetGravity>(il2cpp_functions::resolve_icall("UnityEngine.Physics::set_gravity_Injected"));
             set_gravity(gravity);
 
+            PlayerMoveSpeedHook::SetSpeed(mapLoadData->info.packageInfo->config);
             /// Get All Objects Of Type GameObject
             Array<GameObject*>* allObjects = Resources::FindObjectsOfTypeAll<GameObject*>();
             // if not null
@@ -330,7 +334,7 @@ namespace MapLoader
 
     void Loader::ResetMapProperties()
     {
-        Vector3 gravity = {0.0, -9.8f, 0.0f};
+        Vector3 gravity = {0.0, ::gravity, 0.0f};
         using SetGravity = function_ptr_t<void, Vector3&>;
         static SetGravity set_gravity = reinterpret_cast<SetGravity>(il2cpp_functions::resolve_icall("UnityEngine.Physics::set_gravity_Injected"));
         set_gravity(gravity);

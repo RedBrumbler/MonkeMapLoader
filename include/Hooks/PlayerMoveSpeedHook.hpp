@@ -7,10 +7,10 @@ namespace MapLoader
     {
         private:
             static bool needToSet;
-            static MapConfig* config;
+            static MapConfig config;
         public:
             static bool get_needToSet();
             static MapConfig* get_config();
-            static void SetSpeed(MapConfig* MapConfig);
+            static void SetSpeed(MapConfig MapConfig);
     };
 }
