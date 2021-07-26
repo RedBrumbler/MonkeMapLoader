@@ -14,7 +14,7 @@ namespace MapLoader::MapEvents
     typedef UnorderedEventCallback<> OnMapLeaveEvent;
     typedef UnorderedEventCallback<> OnRoundEndEvent;
     
-    typedef UnorderedEventCallback<rapidjson::Document&, UnityEngine::GameObject*> OnMapLoaded;
+    typedef UnorderedEventCallback<const rapidjson::Document&, UnityEngine::GameObject*> OnMapLoaded;
     
     /// @brief event that gets ran when entering a map
     OnMapEnterEvent& onMapEnterEvent();

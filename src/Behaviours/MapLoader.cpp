@@ -514,6 +514,8 @@ namespace MapLoader
         lobbyName = mapLoadData->info.get_mapString();
 
         mapLoadData->loadState = LoadState::FixLighting;
+
+        MapEvents::onMapLoaded().invoke(mapLoadData->info.packageInfo->config.customData, mapInstance);
         mapLoadData->moveNext = true;
     }
 

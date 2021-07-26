@@ -50,6 +50,12 @@ namespace MapLoader
                 GetJSONProperty(fastJumpLimit, GetFloat());
                 GetJSONProperty(slowJumpMultiplier, GetFloat());
                 GetJSONProperty(fastJumpMultiplier, GetFloat());
+                
+                customData.SetObject();
+                auto customData_itr = val.FindMember(customData);\
+                if (customData_itr != val.MemberEnd()) {\
+                    customData.CopyFrom(customData_itr->value, customData.GetAllocator());
+                }
             }
             
             std::vector<std::string> GetMissingModIDs()
@@ -81,6 +87,7 @@ namespace MapLoader
             float fastJumpLimit = ::DefaultLimits.fastJumpLimit;
             float slowJumpMultiplier = ::DefaultLimits.slowJumpMultiplier;
             float fastJumpMultiplier = ::DefaultLimits.fastJumpMultiplier;
+            rapidjson::Document customData;
     };
 }
 

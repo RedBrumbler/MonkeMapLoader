@@ -311,6 +311,22 @@ MAKE_AUTO_HOOK_MATCH(PhotonNetworkController_GetRegionWithLowestPing, &GlobalNam
     return il2cpp_utils::createcsstr(result);
 }
 
+MAKE_AUTO_HOOK_MATCH(PhotonNetworkController_OnJoinedRoom, &GlobalNamespace::PhotonNetworkController::OnJoinedRoom, void, GlobalNamespace::PhotonNetworkController* self)
+{
+    if (self->currentGameType)
+    {
+        if (MapLoader::Loader::lobbyName != "")
+        {
+            if (!Il2CppString::IsNullOrEmpty(self->currentGameType) && !self->currentGameType->Contains(il2cpp_utils::newcsstr(MapLoader::Loader::lobbyName)))
+            {
+                MapLoader::Loader::ResetMapProperties();
+            }
+        }
+    }
+    else MapLoader::Loader::ResetMapProperties();
+    PhotonNetworkController_OnJoinedRoom(self);
+}
+
 extern "C" void setup(ModInfo& info)
 {
     info.id = ID;
