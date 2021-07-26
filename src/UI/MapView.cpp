@@ -10,7 +10,6 @@ DEFINE_TYPE(MapLoader, MapView);
 extern Logger& getLogger();
 
 using namespace GorillaUI;
-static std::string pluginVersion = PLUGIN_VERSION;
 
 namespace MapLoader
 {
@@ -28,7 +27,8 @@ namespace MapLoader
         loaded = false;
 
         // check wether the map plugin version is higher than the map info 
-        isUpdated = mapInfo ? semver::satisfies(pluginVersion, "^" + ((MapInfo*)mapInfo)->packageInfo->androidRequiredVersion) : false;
+        static std::string pluginVersionStatic = pluginVersion;
+        isUpdated = mapInfo ? semver::satisfies(pluginVersionStatic, "^" + ((MapInfo*)mapInfo)->packageInfo->androidRequiredVersion) : false;
         
         // get any missing mod IDs
         missingModIDs = mapInfo ? ((MapInfo*)mapInfo)->packageInfo->config.GetMissingModIDs() : std::vector<std::string>{};
@@ -163,7 +163,7 @@ namespace MapLoader
             text += "\n  please update it!";
             text += "\n  This map will not be allowed to be loaded";
             text += string_format("\n  Required: %s", ((MapInfo*)mapInfo)->packageInfo->androidRequiredVersion.c_str());
-            text += string_format("\n  You Have: %s", pluginVersion.c_str());
+            text += string_format("\n  You Have: %s", pluginVersion);
         }
 
         int count = missingModIDs.size();

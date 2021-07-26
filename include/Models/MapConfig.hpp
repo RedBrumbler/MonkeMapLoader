@@ -5,6 +5,14 @@
 #include "modloader/shared/modloader.hpp"
 
 #include "UnityEngine/Color.hpp"
+#include "shared-constants.hpp"
+
+/// finds a json property, or if it doesnt exist just doesnt assign a new value
+#define GetJSONProperty(name, getter) \
+    auto __##name ##_itr = val.FindMember(#name);\
+    if (__##name ##_itr != val.MemberEnd()) {\
+        name = __##name ##_itr->value.getter;\
+    }
 
 namespace MapLoader
 {
@@ -21,20 +29,27 @@ namespace MapLoader
                 float g = color["g"].GetFloat();
                 float b = color["b"].GetFloat();
                 mapColor = UnityEngine::Color(r, g, b);
-                gravity = val.HasMember("gravity") ? val["gravity"].GetFloat() : -9.8f;
 
-                guid = val.HasMember("guid") ? val["guid"].GetString() : "";
-                version = val.HasMember("version") ? val["version"].GetInt() : 0;
+                GetJSONProperty(gravity, GetFloat());
+                GetJSONProperty(guid, GetString());
+                GetJSONProperty(version, GetInt());
 
-                if (val.HasMember("requiredModIDs"))
+                auto modIDItr = val.FindMember("requiredModIDs");
+
+                if (modIDItr != val.MemberEnd())
                 {
-                    assert(val["requiredModIDs"].IsArray());
+                    assert(modIDItr->value.IsArray());
 
-                    for (auto& id : val["requiredModIDs"].GetArray())
+                    for (auto& id : modIDItr->value.GetArray())
                     {
                         requiredModIDs.push_back(id.GetString());
                     }
                 }
+
+                GetJSONProperty(slowJumpLimit, GetFloat());
+                GetJSONProperty(fastJumpLimit, GetFloat());
+                GetJSONProperty(slowJumpMultiplier, GetFloat());
+                GetJSONProperty(fastJumpMultiplier, GetFloat());
             }
             
             std::vector<std::string> GetMissingModIDs()
@@ -58,8 +73,15 @@ namespace MapLoader
             std::string cubeMapImagePath = "";
             std::vector<std::string> requiredModIDs = {};
             UnityEngine::Color mapColor = {1.0f, 1.0f, 1.0f};
-            float gravity = -9.8f;
+            float gravity = ::gravity;
             std::string guid = "";
             int version = 0;
+            
+            float slowJumpLimit = ::DefaultLimits.slowJumpLimit;
+            float fastJumpLimit = ::DefaultLimits.fastJumpLimit;
+            float slowJumpMultiplier = ::DefaultLimits.slowJumpMultiplier;
+            float fastJumpMultiplier = ::DefaultLimits.fastJumpMultiplier;
     };
 }
+
+#undef GetJSONProperty

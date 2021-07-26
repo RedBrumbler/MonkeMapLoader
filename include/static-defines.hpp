@@ -1,7 +1,10 @@
 #pragma once
+#include "shared-constants.hpp"
 
-#define MASKLAYER_GORILLATRIGGER 15
-#define MASKLAYER_HANDTRIGGER 18
-#define MASKLAYER_PLAYERTRIGGER 20
+constexpr const struct MaskLayers_t {
+    static const int GorillaTrigger = 15;
+    static const int HandTrigger = 18;
+    static const int PlayerTrigger = 20;
+} MaskLayers;
 
-#define PLUGIN_VERSION VERSION
+constexpr const char* pluginVersion = VERSION;

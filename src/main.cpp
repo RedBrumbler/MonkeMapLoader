@@ -1,6 +1,8 @@
 #include "modloader/shared/modloader.hpp"
 #include "beatsaber-hook/shared/utils/logging.hpp"
 #include "beatsaber-hook/shared/utils/hooking.hpp"
+#include "hooks.hpp"
+
 #include "beatsaber-hook/shared/utils/utils.h"
 #include "quest-cosmetic-loader/shared/CosmeticLoader.hpp"
 #include <thread>
@@ -76,6 +78,9 @@
 #include "gorilla-utils/shared/Callbacks/LobbyCallbacks.hpp"
 #include "gorilla-utils/shared/Callbacks/ConnectionCallbacks.hpp"
 #include "gorilla-utils/shared/Callbacks/MatchMakingCallbacks.hpp"
+//std::vector<void (*)(Logger& logger)> Hooks::installFuncs;
+
+
 ModInfo modInfo;
 
 Logger& getLogger()
@@ -90,13 +95,13 @@ using namespace CosmeticsLoader;
 using namespace MapLoader;
 using namespace UnityEngine;
 
-MAKE_HOOK_MATCH(Player_Awake, &GorillaLocomotion::Player::Awake, void, GorillaLocomotion::Player* self)
+MAKE_AUTO_HOOK_MATCH(Player_Awake, &GorillaLocomotion::Player::Awake, void, GorillaLocomotion::Player* self)
 {
     Player_Awake(self);
     self->get_gameObject()->AddComponent<MapLoader::Player*>();
 }
 
-MAKE_HOOK_MATCH(GorillaComputer_Start, &GlobalNamespace::GorillaComputer::Start, void, GlobalNamespace::GorillaComputer* self)
+MAKE_AUTO_HOOK_MATCH(GorillaComputer_Start, &GlobalNamespace::GorillaComputer::Start, void, GlobalNamespace::GorillaComputer* self)
 {
     if (!MonkeRoomManager::get_instance()) il2cpp_utils::New<MonkeRoomManager*>();
 
@@ -129,7 +134,7 @@ MAKE_HOOK_MATCH(GorillaComputer_Start, &GlobalNamespace::GorillaComputer::Start,
     */
 }
 
-MAKE_HOOK_MATCH(Player_GetSlidePercentage, &GorillaLocomotion::Player::GetSlidePercentage, float, GorillaLocomotion::Player* self, RaycastHit raycastHit)
+MAKE_AUTO_HOOK_MATCH(Player_GetSlidePercentage, &GorillaLocomotion::Player::GetSlidePercentage, float, GorillaLocomotion::Player* self, RaycastHit raycastHit)
 {
     Collider* collider = raycastHit.get_collider();
     GameObject* go = collider->get_gameObject();
@@ -158,7 +163,7 @@ MAKE_HOOK_MATCH(Player_GetSlidePercentage, &GorillaLocomotion::Player::GetSlideP
 }
 
 static double lastGameEnd = 0.0;
-MAKE_HOOK_MATCH(VRRig_PlayTagSound, &GlobalNamespace::VRRig::PlayTagSound, void, GlobalNamespace::VRRig* self, int soundIndex)
+MAKE_AUTO_HOOK_MATCH(VRRig_PlayTagSound, &GlobalNamespace::VRRig::PlayTagSound, void, GlobalNamespace::VRRig* self, int soundIndex)
 {
     using namespace GlobalNamespace;
     VRRig_PlayTagSound(self, soundIndex);
@@ -220,7 +225,7 @@ MAKE_HOOK_MATCH(VRRig_PlayTagSound, &GlobalNamespace::VRRig::PlayTagSound, void,
     }
 }
 
-MAKE_HOOK_MATCH(GorillaTagManager_ReportTag, &GlobalNamespace::GorillaTagManager::ReportTag, void, GlobalNamespace::GorillaTagManager* self, Photon::Realtime::Player* taggedPlayer, Photon::Realtime::Player* taggingPlayer)
+MAKE_AUTO_HOOK_MATCH(GorillaTagManager_ReportTag, &GlobalNamespace::GorillaTagManager::ReportTag, void, GlobalNamespace::GorillaTagManager* self, Photon::Realtime::Player* taggedPlayer, Photon::Realtime::Player* taggingPlayer)
 {
     using namespace Photon::Pun;
     using namespace Photon::Realtime;
@@ -290,7 +295,7 @@ MAKE_HOOK_MATCH(GorillaTagManager_ReportTag, &GlobalNamespace::GorillaTagManager
 
 // forced region patch
 std::string patchForcedRegion = "";
-MAKE_HOOK_MATCH(PhotonNetworkController_GetRegionWithLowestPing, &GlobalNamespace::PhotonNetworkController::GetRegionWithLowestPing, Il2CppString*, GlobalNamespace::PhotonNetworkController* self)
+MAKE_AUTO_HOOK_MATCH(PhotonNetworkController_GetRegionWithLowestPing, &GlobalNamespace::PhotonNetworkController::GetRegionWithLowestPing, Il2CppString*, GlobalNamespace::PhotonNetworkController* self)
 {
     Il2CppString* resultCS = PhotonNetworkController_GetRegionWithLowestPing(self);
 
@@ -322,13 +327,16 @@ extern "C" void load()
     std::string mapDir = "/sdcard/ModData/com.AnotherAxiom.GorillaTag/Mods/MonkeMapLoader/CustomMaps/";
     FileUtils::mkdir(mapDir);
 
-    Logger& logger = getLogger();
+    Hooks::InstallHooks(getLogger());
+    
+    /*
     INSTALL_HOOK(logger, GorillaComputer_Start);
     INSTALL_HOOK(logger, Player_Awake);
     INSTALL_HOOK(logger, Player_GetSlidePercentage);
     INSTALL_HOOK(logger, VRRig_PlayTagSound);
     INSTALL_HOOK(logger, GorillaTagManager_ReportTag);
     INSTALL_HOOK(logger, PhotonNetworkController_GetRegionWithLowestPing);
+    */
 
     using namespace MapLoader;
 

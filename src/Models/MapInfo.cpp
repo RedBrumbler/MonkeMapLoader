@@ -95,7 +95,7 @@ namespace MapLoader
         }
         else 
         {
-            return string_format("%s_%d", packageInfo->descriptor.author.c_str(), packageInfo->descriptor.mapName.c_str());
+            return string_format("%s_%s", packageInfo->descriptor.author.c_str(), packageInfo->descriptor.mapName.c_str());
         }
     }
 }

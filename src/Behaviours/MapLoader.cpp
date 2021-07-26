@@ -33,7 +33,7 @@
 #include "UnityEngine/SceneManagement/LocalPhysicsMode.hpp"
 #include "Utils/LightingUtils.hpp"
 
-#include "MapEventCallbacks.hpp"
+#include "MapEvents.hpp"
 DEFINE_TYPE(MapLoader, Loader);
 
 extern Logger& getLogger();
@@ -142,7 +142,7 @@ namespace MapLoader
 
                 globalData->bigTreeTeleportToMap->get_transform()->Rotate(rotate);
             }, "_Teleporter", il2cpp_utils::GetSystemType("UnityEngine", "GameObject"));
-            globalData->bigTreeTeleportToMap->set_layer(MASKLAYER_PLAYERTRIGGER);
+            globalData->bigTreeTeleportToMap->set_layer(MaskLayers.PlayerTrigger);
             Object::DontDestroyOnLoad(globalData->bigTreeTeleportToMap);
         }
         
@@ -214,7 +214,7 @@ namespace MapLoader
         globalData->fallEmergencyTeleport = GameObject::New_ctor();
         globalData->fallEmergencyTeleport->set_name(fallEmergencyTeleportName);
 
-        globalData->fallEmergencyTeleport->set_layer(MASKLAYER_HANDTRIGGER);
+        globalData->fallEmergencyTeleport->set_layer(MaskLayers.HandTrigger);
         
         BoxCollider* boxCollider = globalData->fallEmergencyTeleport->AddComponent<BoxCollider*>();
         boxCollider->set_isTrigger(true);
@@ -270,7 +270,7 @@ namespace MapLoader
         {
             RoomUtils::JoinModdedLobby(lobbyName);
 
-            MapEventCallbacks::OnMapEnter();
+            MapEvents::onMapEnterEvent().invoke();
 
             Vector3 gravity = {0.0, mapDescriptor->gravity, 0.0f};
             using SetGravity = function_ptr_t<void, Vector3&>;
@@ -335,7 +335,7 @@ namespace MapLoader
         static SetGravity set_gravity = reinterpret_cast<SetGravity>(il2cpp_functions::resolve_icall("UnityEngine.Physics::set_gravity_Injected"));
         set_gravity(gravity);
 
-        MapEventCallbacks::OnMapLeave();
+        MapEvents::onMapLeaveEvent().invoke();
         
         /// Get All Objects Of Type GameObject
         Array<GameObject*>* allObjects = Resources::FindObjectsOfTypeAll<GameObject*>();
@@ -563,7 +563,7 @@ namespace MapLoader
         globalData->fallEmergencyTeleport = GameObject::New_ctor();
         globalData->fallEmergencyTeleport->set_name(fallEmergencyTeleportName);
         
-        globalData->fallEmergencyTeleport->set_layer(MASKLAYER_HANDTRIGGER);
+        globalData->fallEmergencyTeleport->set_layer(MaskLayers.HandTrigger);
         BoxCollider* boxCollider = globalData->fallEmergencyTeleport->AddComponent<BoxCollider*>();
         boxCollider->set_isTrigger(true);
 
@@ -627,7 +627,7 @@ namespace MapLoader
             
             if (collider->get_isTrigger())
             {
-                child->set_layer(MASKLAYER_PLAYERTRIGGER);
+                child->set_layer(MaskLayers.PlayerTrigger);
                 continue;
             }
             else if (child->get_layer() == 0)
@@ -638,7 +638,7 @@ namespace MapLoader
             if (child->GetComponent<Teleporter*>() || child->GetComponent<TagZone*>() || child->GetComponent<ObjectTrigger*>() || child->GetComponent<MovingPlatform*>())
             {
                 collider->set_isTrigger(true);
-                child->set_layer(MASKLAYER_PLAYERTRIGGER);
+                child->set_layer(MaskLayers.PlayerTrigger);
             }
         }
     }
