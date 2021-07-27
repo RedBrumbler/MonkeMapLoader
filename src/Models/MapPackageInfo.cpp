@@ -11,7 +11,6 @@ namespace MapLoader
 {
     MapPackageInfo::MapPackageInfo(rapidjson::Document& doc) : descriptor(Descriptor(doc["descriptor"])) , config(MapConfig(doc["config"]))
     {
-        androidRequiredVersion = "1.0.0";
         androidFileName = "";
         previewCubeMap = nullptr;
 

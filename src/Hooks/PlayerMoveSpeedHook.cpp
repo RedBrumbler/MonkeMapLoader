@@ -4,6 +4,7 @@
 #include "GorillaLocomotion/Player.hpp"
 
 #include "Hooks/PlayerMoveSpeedHook.hpp"
+#include "shared-constants.hpp"
 
 static bool needToSet = false;
 using GorillaTagManager = GlobalNamespace::GorillaTagManager;
@@ -13,11 +14,10 @@ MAKE_AUTO_HOOK_MATCH(GorillaTagManager_Awake, &GorillaTagManager::Awake, void, G
 
     if (MapLoader::PlayerMoveSpeedHook::get_needToSet())
     {
-        MapLoader::MapConfig config = MapLoader::PlayerMoveSpeedHook::get_config();
-        self->slowJumpLimit = config.slowJumpLimit;
-        self->fastJumpLimit = config.fastJumpLimit;
-        self->slowJumpMultiplier = config.slowJumpMultiplier;
-        self->fastJumpMultiplier = config.fastJumpMultiplier;
+        self->slowJumpLimit = MapLoader::PlayerMoveSpeedHook::slowJumpLimit;
+        self->fastJumpLimit = MapLoader::PlayerMoveSpeedHook::fastJumpLimit;
+        self->slowJumpMultiplier = MapLoader::PlayerMoveSpeedHook::slowJumpMultiplier;
+        self->fastJumpMultiplier = MapLoader::PlayerMoveSpeedHook::fastJumpMultiplier;
     }
 
     auto player = GorillaLocomotion::Player::_get__instance();
@@ -28,11 +28,17 @@ MAKE_AUTO_HOOK_MATCH(GorillaTagManager_Awake, &GorillaTagManager::Awake, void, G
 namespace MapLoader
 {
     bool PlayerMoveSpeedHook::needToSet = false;
-    MapConfig PlayerMoveSpeedHook::config;
+    float PlayerMoveSpeedHook::slowJumpLimit = ::DefaultLimits.slowJumpLimit;
+    float PlayerMoveSpeedHook::fastJumpLimit = ::DefaultLimits.fastJumpLimit;
+    float PlayerMoveSpeedHook::slowJumpMultiplier = ::DefaultLimits.slowJumpMultiplier;
+    float PlayerMoveSpeedHook::fastJumpMultiplier = ::DefaultLimits.fastJumpMultiplier;
 
-    void PlayerMoveSpeedHook::SetSpeed(MapConfig* mapConfig)
+    void PlayerMoveSpeedHook::SetSpeed(MapConfig& mapConfig)
     {
-        config = mapConfig;
+        slowJumpLimit = mapConfig.slowJumpLimit;
+        fastJumpLimit = mapConfig.fastJumpLimit;
+        slowJumpMultiplier = mapConfig.slowJumpMultiplier;
+        fastJumpMultiplier = mapConfig.fastJumpMultiplier;
         needToSet = true;
     }
     
@@ -44,11 +50,6 @@ namespace MapLoader
             return true;
         }
         return false;
-    }
-
-    MapConfigA PlayerMoveSpeedHook::get_config()
-    {
-        return config;
     }
 }
 

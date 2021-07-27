@@ -4,5 +4,5 @@
 
 namespace MapLoader::RoomUtils
 {
-    void JoinModdedLobby(std::string gameMode);
+    void JoinModdedLobby(std::string gameMode, bool casual = false);
 }

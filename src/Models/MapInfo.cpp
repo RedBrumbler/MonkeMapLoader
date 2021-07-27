@@ -7,7 +7,7 @@
 
 using namespace UnityEngine;
 
-std::string toLower(std::string aString)
+static std::string toLower(std::string aString)
 {
     std::string result = "";
 

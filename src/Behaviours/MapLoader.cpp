@@ -45,6 +45,18 @@ extern Logger& getLogger();
 using namespace UnityEngine;
 using namespace UnityEngine::SceneManagement;
 
+static std::string toLower(std::string aString)
+{
+    std::string result = "";
+
+    for (auto c : aString)
+    {
+        result += tolower(c);
+    }
+
+    return result;
+}
+
 extern bool getSceneName(Scene scene, std::string& out);
 
 namespace MapLoader
@@ -271,7 +283,7 @@ namespace MapLoader
         // if lobbyName defined
         if (lobbyName != "")
         {
-            RoomUtils::JoinModdedLobby(lobbyName);
+            RoomUtils::JoinModdedLobby(lobbyName, toLower(mapLoadData->info.packageInfo->config.gameMode).find("casual") != std::string::npos);
 
             MapEvents::onMapEnterEvent().invoke();
 

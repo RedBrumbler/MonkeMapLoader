@@ -37,7 +37,7 @@ namespace MapLoader
         GetJSONProperty(gameMode, GetString());
         GetJSONProperty(guid, GetString());
         GetJSONProperty(version, GetInt());
-        auto modIDItr = val.FindMember("requiredModIDs");
+        auto modIDItr = val.FindMember("questRequiredModIds");
         if (modIDItr != val.MemberEnd())
         {
             assert(modIDItr->value.IsArray());
