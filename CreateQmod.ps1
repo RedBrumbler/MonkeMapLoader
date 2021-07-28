@@ -61,9 +61,10 @@ foreach ($lib in $allLibs)
     $libs += ,$lib
 }
 
+$bannedFiles = @("beginnerblock")
+
 $extraFiles = @()
 
-$bannedFiles = @("beginnerblock")
 
 if (Test-Path "./ExtraFiles")
 {

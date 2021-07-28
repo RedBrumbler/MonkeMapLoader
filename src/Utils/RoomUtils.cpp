@@ -15,7 +15,6 @@
 #include "UnityEngine/PlayerPrefs.hpp"
 #include "UnityEngine/SkinnedMeshRenderer.hpp"
 
-#include "Behaviours/MapNetworkJoinTrigger.hpp"
 #include "Behaviours/MonkeRoomManager.hpp"
 
 #include "gorilla-utils/shared/Utils/Room.hpp"
@@ -64,20 +63,7 @@ namespace MapLoader::RoomUtils
         PlayerPrefs::SetString(currentQueue, queueCS);
         PlayerPrefs::Save();
 
-        //MapNetworkJoinTrigger::get_instance()->gameModeName = gameType;
-
-        std::string existingRoomName = MonkeRoomManager::get_instance()->GetLobbyIfExists(map);
-        
-        if (existingRoomName != "" && false)
-        {
-            photonNetworkController->currentGameType = gameType;
-            GorillaUtils::Room::joinRoom(existingRoomName);
-        }
-        else
-        {
-            photonNetworkController->currentGameType = gameType;
-            GorillaUtils::Room::joinPublic(gameModeName);
-            //photonNetworkController->AttemptToJoinPublicRoom(MapNetworkJoinTrigger::get_instance());
-        }
+        photonNetworkController->currentGameType = gameType;
+        GorillaUtils::Room::joinPublic(gameModeName);
     }
 }

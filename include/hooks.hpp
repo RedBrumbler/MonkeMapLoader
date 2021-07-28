@@ -19,24 +19,10 @@ class Hooks {
         }
 };
 
-#define AUTO_INSTALL_HOOK 1
-
-#define NORMAL_INSTALL_TYPE 0
-#define DIRECT_INSTALL_TYPE 1
-#define ORIG_INSTALL_TYPE 2
-
-// undef and re def to make the program do different things
-#define HOOK_INSTALL_TYPE NORMAL_INSTALL_TYPE
-
 #define AUTO_INSTALL(name_) \
 struct Auto_Hook_##name_ { \
     Auto_Hook_##name_() { \
-        if constexpr (!AUTO_INSTALL_HOOK) return; \
-        \
-        if constexpr (HOOK_INSTALL_TYPE == NORMAL_INSTALL_TYPE)\
-            Hooks::AddInstallFunc(::Hooking::InstallHook<Hook_##name_>);\
-        else if constexpr (HOOK_INSTALL_TYPE == ORIG_INSTALL_TYPE)\
-            Hooks::AddInstallFunc(::Hooking::InstallOrigHook<Hook_##name_>);\
+        Hooks::AddInstallFunc(::Hooking::InstallHook<Hook_##name_>);\
     } \
 }; \
 static Auto_Hook_##name_ Auto_Hook_Instance_##name_;
