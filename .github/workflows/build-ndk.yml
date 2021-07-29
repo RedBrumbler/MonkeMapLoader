@@ -96,16 +96,16 @@ jobs:
 
 
       # qpm caching, same as ndk but unused I assume
-#     - name: Cache QPM
-#       id: cache-qpm
-#       uses: actions/cache@v2
-#       env:
-#         cache-name: cache-qpm
-#       with:
-#         path: QPM
-#         key: ${{ runner.os }}-${{ env.cache-name }}-2
-#         restore-keys: |
-#           ${{ runner.os }}-${{ env.cache-name }}-2
+     - name: Cache QPM
+       id: cache-qpm
+       uses: actions/cache@v2
+       env:
+         cache-name: cache-qpm
+       with:
+         path: QPM
+         key: ${{ runner.os }}-${{ env.cache-name }}-2
+         restore-keys: |
+           ${{ runner.os }}-${{ env.cache-name }}-2
       
     # we need qpm to even compile mods, since that is what we use to get packages
     - name: Get QPM
