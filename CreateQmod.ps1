@@ -61,7 +61,7 @@ foreach ($lib in $allLibs)
     $libs += ,$lib
 }
 
-$bannedFiles = @("beginnerblock")
+$bannedFiles = @()
 
 $extraFiles = @()
 
