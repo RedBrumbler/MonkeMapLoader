@@ -143,6 +143,29 @@ MAKE_AUTO_HOOK_MATCH(PhotonNetworkController_GetRegionWithLowestPing, &GlobalNam
     return il2cpp_utils::createcsstr(result);
 }
 
+/*
+MAKE_AUTO_HOOK_MATCH(PhotonNetworkController_OnJoinedRoom, &GlobalNamespace::PhotonNetworkController::OnJoinedRoom, void, GlobalNamespace::PhotonNetworkController* self)
+{
+    if (self->currentGameType)
+    {
+        if (MapLoader::Loader::lobbyName != "")
+        {
+            if (!Il2CppString::IsNullOrEmpty(self->currentGameType) && !self->currentGameType->Contains(il2cpp_utils::newcsstr(MapLoader::Loader::lobbyName)))
+            {
+                getLogger().info("Resetting map properties because game mode did not contain lobbyname");
+                MapLoader::Loader::ResetMapProperties();
+            }
+        }
+    }
+    else
+    {
+        getLogger().info("Resetting map properties because gametype was null");
+        MapLoader::Loader::ResetMapProperties();
+    }
+    PhotonNetworkController_OnJoinedRoom(self);
+}
+*/
+
 extern "C" void setup(ModInfo& info)
 {
     info.id = ID;
@@ -177,13 +200,13 @@ extern "C" void load()
         if (!MonkeRoomManager::get_instance()) il2cpp_utils::New<MonkeRoomManager*>();
         MonkeRoomManager::get_instance()->OnConnectedToMaster();
     };
-
+    
     GorillaUtils::MatchMakingCallbacks::onJoinedRoomEvent() += []() -> void {
         getLogger().info("OnJoinedRoom");
         auto roomGamemodeOpt = GorillaUtils::Room::getGameMode();
         if (roomGamemodeOpt)
         {
-            if ((MapLoader::Loader::lobbyName != "") && (roomGamemodeOpt.value_or(std::string("")).find(MapLoader::Loader::lobbyName) != std::string::npos))
+            if ((MapLoader::Loader::lobbyName != "") && (roomGamemodeOpt.value_or(std::string("")).find(MapLoader::Loader::lobbyName) == std::string::npos))
             {
                 getLogger().info("Resetting map properties because game mode did not contain lobbyname");
                 MapLoader::Loader::ResetMapProperties();
@@ -195,7 +218,7 @@ extern "C" void load()
             MapLoader::Loader::ResetMapProperties();
         }
     };
-
+    
     getLogger().info("Mod loaded!");
 }
 
