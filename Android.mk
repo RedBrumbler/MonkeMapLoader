@@ -19,12 +19,8 @@ TARGET_ARCH_ABI := $(APP_ABI)
 rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
 
 include $(CLEAR_VARS)
-# Creating prebuilt for dependency: modloader - version: 1.2.3
+LOCAL_MODULE := 
 include $(CLEAR_VARS)
-LOCAL_MODULE := modloader
-LOCAL_EXPORT_C_INCLUDES := extern/modloader
-LOCAL_SRC_FILES := extern/libmodloader.so
-include $(PREBUILT_SHARED_LIBRARY)
 # Creating prebuilt for dependency: monkecomputer - version: 1.6.0
 include $(CLEAR_VARS)
 LOCAL_MODULE := monkecomputer
@@ -67,6 +63,12 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := gorilla-utils
 LOCAL_EXPORT_C_INCLUDES := extern/gorilla-utils
 LOCAL_SRC_FILES := extern/libgorilla-utils.so
+include $(PREBUILT_SHARED_LIBRARY)
+# Creating prebuilt for dependency: modloader - version: 1.1.0
+include $(CLEAR_VARS)
+LOCAL_MODULE := modloader
+LOCAL_EXPORT_C_INCLUDES := extern/modloader
+LOCAL_SRC_FILES := extern/libmodloader.so
 include $(PREBUILT_SHARED_LIBRARY)
 # If you would like to use more shared libraries (such as custom UI, utils, or more) add them here, following the format above.
 # In addition, ensure that you add them to the shared library build below.

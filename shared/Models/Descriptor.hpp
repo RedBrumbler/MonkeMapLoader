@@ -13,6 +13,6 @@ namespace MapLoader
             std::string author;
             std::string mapName;
             std::string description;
-            std::string androidRequiredVersion;
+            std::string androidRequiredVersion = "1.0.0";
     };
 }
