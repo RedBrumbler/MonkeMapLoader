@@ -29,7 +29,7 @@ namespace MapLoader
         // check wether the map plugin version is higher than the map info 
         static std::string pluginVersionStatic = pluginVersion;
         std::string requiredVersion = "^" + ((MapInfo*)mapInfo)->packageInfo->descriptor.androidRequiredVersion;
-        getLogger().info("plugin Version: %s, comparing against range: %s", pluginVersion, requiredVersion.c_str())
+        getLogger().info("plugin Version: %s, comparing against range: %s", pluginVersion, requiredVersion.c_str());
         isUpdated = mapInfo ? semver::satisfies(pluginVersionStatic, requiredVersion) : false;
         
         // get any missing mod IDs
