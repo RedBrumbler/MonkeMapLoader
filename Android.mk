@@ -18,9 +18,6 @@ TARGET_ARCH_ABI := $(APP_ABI)
 
 rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
 
-# Creating prebuilt for dependency: custom-types - version: 0.7.0
-include $(CLEAR_VARS)
-LOCAL_MODULE := 
 include $(CLEAR_VARS)
 # Creating prebuilt for dependency: modloader - version: 1.2.3
 include $(CLEAR_VARS)
@@ -48,9 +45,9 @@ LOCAL_SRC_FILES := extern/libzip.so
 include $(PREBUILT_SHARED_LIBRARY)
 # Creating prebuilt for dependency: beatsaber-hook - version: 2.1.4
 include $(CLEAR_VARS)
-LOCAL_MODULE := beatsaber-hook_2_1_4
+LOCAL_MODULE := beatsaber-hook_2_0_3
 LOCAL_EXPORT_C_INCLUDES := extern/beatsaber-hook
-LOCAL_SRC_FILES := extern/libbeatsaber-hook_2_1_4.so
+LOCAL_SRC_FILES := extern/libbeatsaber-hook_2_0_3.so
 LOCAL_CPP_FEATURES += rtti exceptions
 include $(PREBUILT_SHARED_LIBRARY)
 # Creating prebuilt for dependency: custom-types - version: 0.12.4
@@ -81,7 +78,7 @@ LOCAL_SRC_FILES += $(call rwildcard,extern/beatsaber-hook/src/inline-hook,*.cpp)
 LOCAL_SRC_FILES += $(call rwildcard,extern/beatsaber-hook/src/inline-hook,*.c)
 LOCAL_SHARED_LIBRARIES += modloader
 LOCAL_SHARED_LIBRARIES += monkecomputer
-LOCAL_SHARED_LIBRARIES += beatsaber-hook_2_1_4
+LOCAL_SHARED_LIBRARIES += beatsaber-hook_2_0_3
 LOCAL_SHARED_LIBRARIES += custom-types
 LOCAL_SHARED_LIBRARIES += quest-cosmetic-loader_0_2_1
 LOCAL_SHARED_LIBRARIES += zip
