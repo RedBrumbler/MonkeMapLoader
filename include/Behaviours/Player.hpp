@@ -5,12 +5,6 @@
 #include "UnityEngine/Transform.hpp"
 #include "UnityEngine/MonoBehaviour.hpp"
 
-namespace MapLoader
-{
-    class Player;
-}
-
-
 DECLARE_CLASS_CODEGEN(MapLoader, Player, UnityEngine::MonoBehaviour,
     DECLARE_INSTANCE_FIELD(UnityEngine::Transform*, destination);
     DECLARE_INSTANCE_FIELD(bool, isTeleporting);

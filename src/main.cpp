@@ -100,7 +100,11 @@ using namespace UnityEngine;
 MAKE_AUTO_HOOK_MATCH(Player_Awake, &GorillaLocomotion::Player::Awake, void, GorillaLocomotion::Player* self)
 {
     Player_Awake(self);
-    self->get_gameObject()->AddComponent<MapLoader::Player*>();
+    getLogger().info("self: %p", self);
+    auto go = self->get_gameObject();
+    getLogger().info("gameObject: %p", go);
+    auto comp = go->AddComponent<MapLoader::Player*>();
+    getLogger().info("component: %p", comp);
 }
 
 MAKE_AUTO_HOOK_MATCH(GorillaComputer_Start, &GlobalNamespace::GorillaComputer::Start, void, GlobalNamespace::GorillaComputer* self)

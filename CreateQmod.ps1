@@ -145,7 +145,6 @@ if (Test-Path $qmod)
 
 $msg = "Creating qmod for module " + $env:module_id + " With name " + $qmod
 echo $msg
-echo $fileList
 Compress-Archive -Path $fileList -DestinationPath $zip -Update
 
 & move-item -Force $zip $qmod
