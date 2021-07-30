@@ -283,6 +283,7 @@ namespace MapLoader
         // if lobbyName defined
         if (lobbyName != "")
         {
+            getLogger().info("Joining Modded Lobby");
             RoomUtils::JoinModdedLobby(lobbyName, toLower(mapLoadData->info.packageInfo->config.gameMode).find("casual") != std::string::npos);
 
             MapEvents::onMapEnterEvent().invoke();
@@ -323,6 +324,7 @@ namespace MapLoader
 
     void Loader::ForceRespawn()
     {
+        getLogger().info("Forcing Respawn");
         Teleporter* teleporter = globalData->bigTreeTeleportToMap->GetComponent<Teleporter*>();
         
         static Il2CppString* spawnPointContainerName = il2cpp_utils::createcsstr("SpawnPointContainer", il2cpp_utils::StringType::Manual);
@@ -346,6 +348,7 @@ namespace MapLoader
 
     void Loader::ResetMapProperties()
     {
+        getLogger().info("Resetting Map Properties");
         Vector3 gravity = {0.0, ::gravity, 0.0f};
         using SetGravity = function_ptr_t<void, Vector3&>;
         static SetGravity set_gravity = reinterpret_cast<SetGravity>(il2cpp_functions::resolve_icall("UnityEngine.Physics::set_gravity_Injected"));

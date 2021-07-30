@@ -121,7 +121,7 @@ MAKE_AUTO_HOOK_MATCH(GorillaComputer_Start, &GlobalNamespace::GorillaComputer::S
 
     for (int i = 0; i < quitBoxes->Length(); i++)
     {
-        quitBoxes->values[i]->set_enabled(false);
+        quitBoxes->get_gameObject()->SetActive(false);
     }
 }
 
