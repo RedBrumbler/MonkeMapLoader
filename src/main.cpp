@@ -121,7 +121,7 @@ MAKE_AUTO_HOOK_MATCH(GorillaComputer_Start, &GlobalNamespace::GorillaComputer::S
 
     for (int i = 0; i < quitBoxes->Length(); i++)
     {
-        quitBoxes->get_gameObject()->SetActive(false);
+        quitBoxes->values[i]->get_gameObject()->SetActive(false);
     }
 }
 
@@ -179,13 +179,21 @@ extern "C" void load()
     };
 
     GorillaUtils::MatchMakingCallbacks::onJoinedRoomEvent() += []() -> void {
-        auto roomGamemode = GorillaUtils::Room::getRoomGameMode();
-        if (roomGamemode)
+        getLogger().info("OnJoinedRoom");
+        auto roomGamemodeOpt = GorillaUtils::Room::getGameMode();
+        if (roomGamemodeOpt)
         {
-            if ((MapLoader::Loader::lobbyName != "") && ((*roomGamemode).find(MapLoader::Loader::lobbyName) != std::string::npos))
+            if ((MapLoader::Loader::lobbyName != "") && (roomGamemodeOpt.value_or(std::string("")).find(MapLoader::Loader::lobbyName) != std::string::npos))
+            {
+                getLogger().info("Resetting map properties because game mode did not contain lobbyname");
                 MapLoader::Loader::ResetMapProperties();
+            }
         }
-        else MapLoader::Loader::ResetMapProperties();
+        else 
+        {
+            getLogger().info("Resetting map properties because game mode was nullopt");
+            MapLoader::Loader::ResetMapProperties();
+        }
     };
 
     getLogger().info("Mod loaded!");

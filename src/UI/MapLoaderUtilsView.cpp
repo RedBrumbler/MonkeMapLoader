@@ -126,6 +126,7 @@ namespace MapLoader
 
         if (treePointTransform)
         {
+            getLogger().info("Resetting map properties because player used the watch");
             Loader::ResetMapProperties();
             Player::TeleportPlayer(treePointTransform);
         }

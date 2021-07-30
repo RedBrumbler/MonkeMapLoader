@@ -76,7 +76,11 @@ namespace MapLoader
 
         if (tagOnTeleport) TagZone::TagLocalPlayer();
         if (joinGameOnTeleport) Loader::JoinGame();
-        if (teleporterType == TeleporterType::Treehouse) Loader::ResetMapProperties();
+        if (teleporterType == TeleporterType::Treehouse) 
+        {
+            getLogger().info("Resetting map properties becasue player went through a teleporter back");
+            Loader::ResetMapProperties();
+        }
         
         // teleport after the entire world has been shifted
         Player::TeleportPlayer(dest);
