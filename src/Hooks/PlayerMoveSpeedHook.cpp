@@ -1,4 +1,3 @@
-#include "beatsaber-hook/shared/utils/hooking.hpp"
 #include "hooks.hpp"
 #include "GlobalNamespace/GorillaTagManager.hpp"
 #include "GorillaLocomotion/Player.hpp"
